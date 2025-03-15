@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
 import Service.MessageService;
 import io.javalin.Javalin;
@@ -92,14 +93,22 @@ public class SocialMediaController {
     /**
      * Handler for new message post
      * Request contains message
-     * Successful (200) if message is valid if:
-     * - message_text not blank and not over 255 characters
-     * - posted_by is an existing user
+     * Successful (200) response contains JSON of message
      * Client Error (400) if not successful
      * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void newMessageHandler(Context ctx) {
-
+          * @throws JsonProcessingException 
+          * @throws JsonMappingException 
+          */
+         private void newMessageHandler(Context ctx) throws JsonMappingException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message addedMessage = messageService.addMessage(message);
+        if (addedMessage != null) {
+            ctx.json(addedMessage).status(200);
+        }
+        else {
+            ctx.status(400);
+        }
     }
 
     /**
