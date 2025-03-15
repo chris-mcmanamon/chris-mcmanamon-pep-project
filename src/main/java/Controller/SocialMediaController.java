@@ -1,5 +1,12 @@
 package Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Model.Account;
+import Service.AccountService;
+import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -11,6 +18,14 @@ import io.javalin.http.Context;
  * controller may be built.
  */
 public class SocialMediaController {
+    AccountService accountService;
+    MessageService messageService;
+
+    public SocialMediaController() {
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
+    }
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in
      * the startAPI() method, as the test
@@ -39,10 +54,23 @@ public class SocialMediaController {
      * - username is not blank
      * - password is at least 4 characters long
      * - Account with that username does not already exist
+     * Response contains JSON of account
      * Client Error (400) if not successful
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
+     * @throws JsonProcessingException 
+     * @throws JsonMappingException 
      */
-    private void registrationHandler(Context ctx) {
-
+    private void registrationHandler(Context ctx) throws JsonMappingException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account addedAccount = accountService.registerAccount(account);
+        if (addedAccount != null) {
+            ctx.json(mapper.writeValueAsString(addedAccount)).status(200);
+        }
+        else {
+            ctx.status(400);
+        }
+        
     }
 
     /**
@@ -51,6 +79,7 @@ public class SocialMediaController {
      * - username and password match a database record
      * Response: JSON of account
      * Client Error (401) if unauthorized
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void loginHandler(Context ctx) {
 
@@ -63,7 +92,7 @@ public class SocialMediaController {
      * - message_text not blank and not over 255 characters
      * - posted_by is an existing user
      * Client Error (400) if not successful
-     * 
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void newMessageHandler(Context ctx) {
 
@@ -74,6 +103,7 @@ public class SocialMediaController {
      * Successful (200) always
      * Response contains a list of all messages from db, or empty list if no
      * messages
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void getAllMessagesHandler(Context ctx) {
 
@@ -83,6 +113,7 @@ public class SocialMediaController {
      * Handler for retrieving a message by ID
      * Successful (200) always
      * Response contains JSON message or empty if message does not exist
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void getMessageHandler(Context ctx) {
 
@@ -93,6 +124,7 @@ public class SocialMediaController {
      * Successful (200) response always
      * Response contains the deleted message if it existed, or empty if it did not
      * exist
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void deleteMessageHandler(Context ctx) {
 
@@ -106,6 +138,7 @@ public class SocialMediaController {
      * - new message_text is not blank and not over 255 characters
      * Response contains full updated message
      * Client Error (400) if update is not successful for any reason
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void updateMessageHandler(Context ctx) {
 
@@ -116,6 +149,7 @@ public class SocialMediaController {
      * Successful (200) always
      * Response contains a list of messages by user, or empty if there are no
      * messages
+     * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void getAllMessagesByUser(Context ctx) {
 
