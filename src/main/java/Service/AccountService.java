@@ -33,6 +33,11 @@ public class AccountService {
     return accountDAO.insertAccount(account);
   }
 
+  /**
+   * Verify that account exists in permanent storage
+   * @param account an account object
+   * @return the account including account_id if it exists
+   */
   public Account authenticateAccount(Account account) {
     return accountDAO.authenticateAccount(account);
   }

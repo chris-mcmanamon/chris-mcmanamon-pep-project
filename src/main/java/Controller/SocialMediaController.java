@@ -50,12 +50,8 @@ public class SocialMediaController {
 
     /**
      * Handler for Account registration. Request contains username and password
-     * Successful (200) if:
-     * - username is not blank
-     * - password is at least 4 characters long
-     * - Account with that username does not already exist
-     * Response contains JSON of account
-     * Client Error (400) if not successful
+     * Response status (200) contains JSON of account if successful
+     * Client Error (400) if registration fails
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      * @throws JsonProcessingException 
      * @throws JsonMappingException 
@@ -75,14 +71,22 @@ public class SocialMediaController {
 
     /**
      * Handler for User Login
-     * Successful (200) if:
-     * - username and password match a database record
-     * Response: JSON of account
+     * Successful (200) response contains JSON of account
      * Client Error (401) if unauthorized
      * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void loginHandler(Context ctx) {
-
+          * @throws JsonProcessingException 
+          * @throws JsonMappingException 
+          */
+         private void loginHandler(Context ctx) throws JsonMappingException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account authenticatedAccount = accountService.authenticateAccount(account);
+        if (authenticatedAccount != null) {
+            ctx.json(authenticatedAccount).status(200);
+        }
+        else {
+            ctx.status(401);
+        }
     }
 
     /**
