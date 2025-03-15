@@ -1,5 +1,6 @@
 package DAO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
@@ -22,8 +23,8 @@ public class MessageDAO {
       ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
       if (pkeyResultSet.next()) {
         int generated_message_id = pkeyResultSet.getInt(1);
-        return new Message(generated_message_id, 
-            message.getPosted_by(), 
+        return new Message(generated_message_id,
+            message.getPosted_by(),
             message.getMessage_text(),
             message.getTime_posted_epoch());
       }
@@ -36,7 +37,23 @@ public class MessageDAO {
   }
 
   public List<Message> getAllMessages() {
-    return null;
+    Connection connection = ConnectionUtil.getConnection();
+    List<Message> messages = new ArrayList<>();
+    try {
+      String sql = "SELECT * FROM message";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+      ResultSet rs = preparedStatement.executeQuery();
+      while (rs.next()) {
+        Message message = new Message(rs.getInt("message_id"),
+            rs.getInt("posted_by"), rs.getString("message_text"),
+            rs.getLong("time_posted_epoch"));
+        messages.add(message);
+      }
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+    return messages;
   }
 
   public Message getMessageByID(int message_id) {

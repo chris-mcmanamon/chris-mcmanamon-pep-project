@@ -38,9 +38,9 @@ public class AccountDAO {
       preparedStatement.setString(1, username);
       ResultSet rs = preparedStatement.executeQuery();
       if (rs.next()) {
-        Account account = new Account(rs.getInt(1),
-            rs.getString(2),
-            rs.getString(3));
+        Account account = new Account(rs.getInt("account_id"),
+            rs.getString("username"),
+            rs.getString("password"));
         return account;
       }
     } catch (SQLException e) {
@@ -58,9 +58,9 @@ public class AccountDAO {
       preparedStatement.setInt(1, userID);
       ResultSet rs = preparedStatement.executeQuery();
       if (rs.next()) {
-        Account account = new Account(rs.getInt(1),
-            rs.getString(2),
-            rs.getString(3));
+        Account account = new Account(rs.getInt("account_id"),
+            rs.getString("username"),
+            rs.getString("password"));
         return account;
       }
     } catch (SQLException e) {
@@ -82,8 +82,8 @@ public class AccountDAO {
       ResultSet rs = preparedStatement.executeQuery();
 
       if (rs.next()) {
-        Account foundAccount = new Account(rs.getInt(1),
-            rs.getString(2), rs.getString(3));
+        Account foundAccount = new Account(rs.getInt("account_id"),
+            rs.getString("username"), rs.getString("password"));
         return foundAccount;
       }
 

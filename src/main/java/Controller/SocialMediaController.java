@@ -1,5 +1,7 @@
 package Controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -114,12 +116,12 @@ public class SocialMediaController {
     /**
      * Handler for retrieving all messages
      * Successful (200) always
-     * Response contains a list of all messages from db, or empty list if no
-     * messages
+     * Response contains a list of all messages, or empty list if no messages
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void getAllMessagesHandler(Context ctx) {
-
+        List<Message> messages = messageService.getAllMessages();
+        ctx.json(messages).status(200);
     }
 
     /**
