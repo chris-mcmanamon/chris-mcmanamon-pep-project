@@ -146,10 +146,20 @@ public class SocialMediaController {
      * Successful (200) response always
      * Response contains the deleted message if it existed, or empty if it did not
      * exist
+     * TODO: Although not specified in the project requirements, there is the possibility that 
+     * the message existed, but a SQLException occurred and the message was not deleted.
+     * We could throw the exception up to the Controller and respond with status 500?
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
     private void deleteMessageHandler(Context ctx) {
-
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.deleteMessageByID(message_id);
+        if (message != null) {
+            ctx.json(message).status(200);
+        }
+        else {
+            ctx.status(200);
+        }
     }
 
     /**
