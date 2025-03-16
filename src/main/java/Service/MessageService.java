@@ -3,14 +3,16 @@ package Service;
 import java.util.List;
 
 import DAO.AccountDAO;
+import DAO.AccountDAOImpl;
 import DAO.MessageDAO;
+import DAO.MessageDAOImpl;
 import Model.Message;
 
 public class MessageService {
   private MessageDAO messageDAO;
 
   public MessageService() {
-    messageDAO = new MessageDAO();
+    messageDAO = new MessageDAOImpl();
   }
 
   public MessageService(MessageDAO messageDAO) {
@@ -32,7 +34,7 @@ public class MessageService {
       return null;
 
     // Validate user
-    AccountDAO accountDAO = new AccountDAO();
+    AccountDAO accountDAO = new AccountDAOImpl();
     if (accountDAO.getAccountByID(message.getPosted_by()) == null)
       return null;
 

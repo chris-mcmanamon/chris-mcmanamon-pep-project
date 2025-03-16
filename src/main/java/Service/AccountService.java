@@ -1,13 +1,14 @@
 package Service;
 
 import DAO.AccountDAO;
+import DAO.AccountDAOImpl;
 import Model.Account;
 
 public class AccountService {
   private AccountDAO accountDAO;
 
   public AccountService() {
-    accountDAO = new AccountDAO();
+    accountDAO = new AccountDAOImpl();
   }
 
   public AccountService(AccountDAO accountDAO) {
