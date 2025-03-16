@@ -90,8 +90,19 @@ public class MessageDAO {
     }
   }
 
-  public Message updateMessageByID(int message_id) {
-    return null;
+  public void updateMessageByID(int message_id, String newMessage) {
+    Connection connection = ConnectionUtil.getConnection();
+    try {
+      String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+      PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+      preparedStatement.setString(1, newMessage);
+      preparedStatement.setInt(2, message_id);
+      preparedStatement.executeUpdate();
+    }
+    catch(SQLException e) {
+      System.out.println(e.getMessage());
+    }    
   }
 
   public List<Message> getAllMessagesByUser(int account_id) {

@@ -63,8 +63,22 @@ public class MessageService {
     return message;
   }
 
-  public Message updateMessageByID(int message_id) {
-    return messageDAO.updateMessageByID(message_id);
+  /**
+   * Update message
+   * message_id must exist
+   * new message_text cannot be blank and cannot be over 255 characters
+   * @param message_id the id of the Message to update
+   * @param newMessage the text of the new message
+   * @return
+   */
+  public Message updateMessageByID(int message_id, String newMessage) {
+    // Validate new message
+    if (newMessage == null || newMessage.length() == 0 || newMessage.length() > 255) return null;
+    // Verify that message exists in permanent storage
+    if (messageDAO.getMessageByID(message_id) == null) return null;
+
+    messageDAO.updateMessageByID(message_id, newMessage);
+    return messageDAO.getMessageByID(message_id);
   }
 
   public List<Message> getAllMessagesByUser(int account_id) {

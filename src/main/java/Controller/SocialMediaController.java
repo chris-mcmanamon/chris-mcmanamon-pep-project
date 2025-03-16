@@ -165,15 +165,23 @@ public class SocialMediaController {
     /**
      * Handler for updating a message text by ID
      * Request body contains new message_text and message_id
-     * Successful (200) if:
-     * - message_id exists
-     * - new message_text is not blank and not over 255 characters
-     * Response contains full updated message
+     * Successful (200) contains full updated message
      * Client Error (400) if update is not successful for any reason
      * @param context The Javalin Context object manages information about both the HTTP request and response.
-     */
-    private void updateMessageHandler(Context ctx) {
-
+          * @throws JsonProcessingException 
+          * @throws JsonMappingException 
+          */
+         private void updateMessageHandler(Context ctx) throws JsonMappingException, JsonProcessingException {
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message updatedMessage = messageService.updateMessageByID(message_id, message.getMessage_text());
+        if (updatedMessage != null) {
+            ctx.json(updatedMessage).status(200);
+        }
+        else {
+            ctx.status(400);
+        }
     }
 
     /**
