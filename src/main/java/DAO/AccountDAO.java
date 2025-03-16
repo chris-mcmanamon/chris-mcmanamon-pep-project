@@ -10,5 +10,4 @@ public interface AccountDAO {
   public Account getAccountByID(int userID);
 
   public Account authenticateAccount(Account account);
-  
 }

@@ -16,19 +16,17 @@ public class AccountService {
   }
 
   /**
-   * username is provided and cannot be blank
-   * password is provided and must be at least 4 characters long
-   * @param account an account object
+   * Register an account
+   *
+   * @param account an account object; username cannot be blank; password must be at least 4 chars
    * @return account if it was successfully persisted, null otherwise
    */
   public Account registerAccount(Account account) {
     // Validate inputs
-    if (account.getUsername().equals("") || account.getPassword().length() < 4)
-      return null;
-    
+    if (account.getUsername().equals("") || account.getPassword().length() < 4) return null;
+
     // Ensure account does not already exist
-    if (accountDAO.getAccountByUsername(account.getUsername()) != null)
-      return null;
+    if (accountDAO.getAccountByUsername(account.getUsername()) != null) return null;
 
     // Return inserted account
     return accountDAO.insertAccount(account);
@@ -36,6 +34,7 @@ public class AccountService {
 
   /**
    * Verify that account exists in permanent storage
+   *
    * @param account an account object
    * @return the account including account_id if it exists
    */

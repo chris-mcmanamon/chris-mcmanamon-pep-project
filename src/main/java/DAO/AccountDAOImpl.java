@@ -2,7 +2,6 @@ package DAO;
 
 import Model.Account;
 import Util.ConnectionUtil;
-
 import java.sql.*;
 
 public class AccountDAOImpl implements AccountDAO {
@@ -11,7 +10,8 @@ public class AccountDAOImpl implements AccountDAO {
     Connection connection = ConnectionUtil.getConnection();
     try {
       String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
-      PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+      PreparedStatement preparedStatement =
+          connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
       preparedStatement.setString(1, account.getUsername());
       preparedStatement.setString(2, account.getPassword());
@@ -39,9 +39,9 @@ public class AccountDAOImpl implements AccountDAO {
       preparedStatement.setString(1, username);
       ResultSet rs = preparedStatement.executeQuery();
       if (rs.next()) {
-        Account account = new Account(rs.getInt("account_id"),
-            rs.getString("username"),
-            rs.getString("password"));
+        Account account =
+            new Account(
+                rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
         return account;
       }
     } catch (SQLException e) {
@@ -60,9 +60,9 @@ public class AccountDAOImpl implements AccountDAO {
       preparedStatement.setInt(1, userID);
       ResultSet rs = preparedStatement.executeQuery();
       if (rs.next()) {
-        Account account = new Account(rs.getInt("account_id"),
-            rs.getString("username"),
-            rs.getString("password"));
+        Account account =
+            new Account(
+                rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
         return account;
       }
     } catch (SQLException e) {
@@ -84,8 +84,9 @@ public class AccountDAOImpl implements AccountDAO {
       ResultSet rs = preparedStatement.executeQuery();
 
       if (rs.next()) {
-        Account foundAccount = new Account(rs.getInt("account_id"),
-            rs.getString("username"), rs.getString("password"));
+        Account foundAccount =
+            new Account(
+                rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
         return foundAccount;
       }
 
