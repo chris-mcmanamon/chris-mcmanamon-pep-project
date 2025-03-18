@@ -18,14 +18,22 @@ public class AccountService {
   /**
    * Register an account
    *
-   * @param account an account object; username cannot be blank; password must be at least 4 chars
+   * @param account an account object; username cannot be blank; password must be at least 4 chars.
+   * Additional checks added: username and pw <= 255 chars to match column constraints.
    * @return account if it was successfully persisted, null otherwise
    */
   public Account registerAccount(Account account) {
-    // Validate inputs
-    if (account.getUsername().equals("") || account.getPassword().length() < 4) return null;
+    // Reject invalid username or password
+    if (account == null || account.getUsername() == null || account.getPassword() == null
+        || account.getUsername().isBlank() 
+        || account.getUsername().length() > 255 
+        || account.getPassword().length() < 4 
+        || account.getPassword().length() > 255)
+        {
+          return null;
+        }
 
-    // Ensure account does not already exist
+    // Reject if username already exists
     if (accountDAO.getAccountByUsername(account.getUsername()) != null) return null;
 
     // Return inserted account

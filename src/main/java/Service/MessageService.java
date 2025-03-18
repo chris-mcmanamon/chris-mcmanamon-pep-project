@@ -26,9 +26,9 @@ public class MessageService {
    * @return the persisted message if successful
    */
   public Message addMessage(Message message) {
-    // Validate message inputs
-    if (message.getMessage_text() == null
-        || message.getMessage_text().length() == 0
+    // Reject invalid message inputs
+    if (message == null || message.getMessage_text() == null
+        || message.getMessage_text().isBlank()
         || message.getMessage_text().length() > 255) return null;
 
     // Validate user
@@ -81,8 +81,9 @@ public class MessageService {
    * @return the updated message if successful, null otherwise
    */
   public Message updateMessageByID(int message_id, String newMessage) {
-    // Validate new message
-    if (newMessage == null || newMessage.length() == 0 || newMessage.length() > 255) return null;
+    // Reject invalid message
+    if (newMessage == null || newMessage.isBlank() || newMessage.length() > 255) return null;
+    
     // Verify that message exists in permanent storage
     if (messageDAO.getMessageByID(message_id) == null) return null;
 
